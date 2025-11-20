@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Search, MapPin, Calendar, Clock, Star, Scissors, User, ChevronRight, Check, Mail, Lock, Phone, ArrowLeft, Upload, Plus, X, Building2, Users, AlertCircle, DollarSign } from "lucide-react"
+import { Search, MapPin, Calendar, Clock, Star, Scissors, User, ChevronRight, Check, Mail, Lock, Phone, ArrowLeft, Upload, Plus, X, Building2, Users, AlertCircle, DollarSign, Bell, TrendingUp, BarChart3, Send, Crown, CalendarDays, RefreshCw, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 // Mock data
 const barbearias = [
@@ -21,7 +22,8 @@ const barbearias = [
     distancia: "1.2 km",
     avaliacao: 4.8,
     avaliacoes: 234,
-    imagem: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&h=300&fit=crop"
+    imagem: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&h=300&fit=crop",
+    premium: false
   },
   {
     id: 2,
@@ -32,7 +34,8 @@ const barbearias = [
     distancia: "2.5 km",
     avaliacao: 4.9,
     avaliacoes: 456,
-    imagem: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&h=300&fit=crop"
+    imagem: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&h=300&fit=crop",
+    premium: true
   },
   {
     id: 3,
@@ -43,7 +46,8 @@ const barbearias = [
     distancia: "3.1 km",
     avaliacao: 4.7,
     avaliacoes: 189,
-    imagem: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&h=300&fit=crop"
+    imagem: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&h=300&fit=crop",
+    premium: false
   }
 ]
 
@@ -89,6 +93,120 @@ const horarios = [
   "14:00", "14:30", "15:00", "15:30", "16:00", "16:30",
   "17:00", "17:30", "18:00", "18:30", "19:00"
 ]
+
+// Mock data for client dashboard
+const agendamentosAtivos = [
+  {
+    id: 1,
+    barbearia: "Barbearia Clássica",
+    profissional: "Carlos Silva",
+    servico: "Corte de Cabelo",
+    data: "2024-10-15",
+    horario: "14:00",
+    status: "confirmado",
+    endereco: "Rua Augusta, 1500 - São Paulo"
+  },
+  {
+    id: 2,
+    barbearia: "The Barber Shop",
+    profissional: "Roberto Alves",
+    servico: "Barba",
+    data: "2024-10-20",
+    horario: "10:00",
+    status: "confirmado",
+    endereco: "Av. Paulista, 2300 - São Paulo"
+  }
+]
+
+const historicoServicos = [
+  {
+    id: 1,
+    barbearia: "Barbearia Clássica",
+    profissional: "Carlos Silva",
+    servico: "Corte de Cabelo",
+    data: "2024-09-15",
+    horario: "14:00",
+    status: "concluido",
+    avaliacao: null,
+    endereco: "Rua Augusta, 1500 - São Paulo"
+  },
+  {
+    id: 2,
+    barbearia: "The Barber Shop",
+    profissional: "Roberto Alves",
+    servico: "Barba",
+    data: "2024-09-10",
+    horario: "10:00",
+    status: "concluido",
+    avaliacao: 5,
+    comentario: "Excelente serviço!",
+    endereco: "Av. Paulista, 2300 - São Paulo"
+  }
+]
+
+const tendencias = [
+  { nome: "Corte Undercut", popularidade: 85, imagem: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=200&h=150&fit=crop" },
+  { nome: "Barba Completa", popularidade: 72, imagem: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=200&h=150&fit=crop" },
+  { nome: "Corte Militar", popularidade: 68, imagem: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=200&h=150&fit=crop" }
+]
+
+// Mock data for barbearia dashboard
+const agendamentosBarbearia = [
+  {
+    id: 1,
+    cliente: "João Silva",
+    servico: "Corte de Cabelo",
+    data: "2024-10-15",
+    horario: "14:00",
+    status: "confirmado",
+    profissional: "Carlos Silva"
+  },
+  {
+    id: 2,
+    cliente: "Maria Santos",
+    servico: "Barba",
+    data: "2024-10-15",
+    horario: "15:00",
+    status: "iniciado",
+    profissional: "Roberto Alves"
+  },
+  {
+    id: 3,
+    cliente: "Pedro Costa",
+    servico: "Corte + Barba",
+    data: "2024-10-14",
+    horario: "16:00",
+    status: "concluido",
+    profissional: "Carlos Silva"
+  }
+]
+
+const relatorios = {
+  semanal: {
+    faturamentoBruto: 2500,
+    faturamentoLiquido: 2250,
+    profissionais: [
+      { nome: "Carlos Silva", atendimentos: 12, notaMedia: 4.8 },
+      { nome: "Roberto Alves", atendimentos: 8, notaMedia: 4.7 }
+    ],
+    kpis: {
+      noShow: 3,
+      cancelamentos: 2
+    }
+  },
+  mensal: {
+    faturamentoBruto: 10000,
+    faturamentoLiquido: 9000,
+    profissionais: [
+      { nome: "Carlos Silva", atendimentos: 45, notaMedia: 4.8 },
+      { nome: "Roberto Alves", atendimentos: 32, notaMedia: 4.7 }
+    ],
+    kpis: {
+      noShow: 12,
+      cancelamentos: 8
+    }
+  }
+}
 
 // Gerar próximos 30 dias
 const gerarProximosDias = () => {
@@ -148,8 +266,15 @@ const abrirGoogleMaps = (endereco: string, lat?: number, lng?: number) => {
   window.open(url, '_blank')
 }
 
+// Função para sincronizar com calendário
+const sincronizarCalendario = (titulo: string, data: string, horario: string, endereco: string) => {
+  const dataHora = new Date(`${data}T${horario}`)
+  const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(titulo)}&dates=${dataHora.toISOString().replace(/[:-]/g, '').replace(/\.\d{3}/, '')}/${new Date(dataHora.getTime() + 60 * 60 * 1000).toISOString().replace(/[:-]/g, '').replace(/\.\d{3}/, '')}&location=${encodeURIComponent(endereco)}`
+  window.open(googleCalendarUrl, '_blank')
+}
+
 export default function BarbeariaFacil() {
-  const [etapa, setEtapa] = useState<"inicial" | "cadastro-cliente" | "busca" | "profissional" | "horario" | "confirmacao" | "cadastro" | "cadastro-barbearia">("inicial")
+  const [etapa, setEtapa] = useState<"inicial" | "cadastro-cliente" | "busca" | "profissional" | "horario" | "confirmacao" | "cadastro" | "cadastro-barbearia" | "cliente-dashboard" | "barbearia-dashboard">("inicial")
   const [barbeariaId, setBarbeariaId] = useState<number | null>(null)
   const [profissionalId, setProfissionalId] = useState<number | null>(null)
   const [servicoId, setServicoId] = useState<number | null>(null)
@@ -207,6 +332,13 @@ export default function BarbeariaFacil() {
     confirmarSenha: ""
   })
 
+  // Estados para dashboards
+  const [abaCliente, setAbaCliente] = useState<"agendamentos" | "historico" | "tendencias">("agendamentos")
+  const [abaBarbearia, setAbaBarbearia] = useState<"agendamentos" | "relatorios" | "mensagens" | "premium">("agendamentos")
+  const [periodoRelatorio, setPeriodoRelatorio] = useState<"semanal" | "mensal">("semanal")
+  const [mensagemMassa, setMensagemMassa] = useState("")
+  const [avaliacaoTemp, setAvaliacaoTemp] = useState({ estrelas: 0, comentario: "" })
+
   // Estados de validação
   const [errosCliente, setErrosCliente] = useState<string[]>([])
   const [errosBarbearia, setErrosBarbearia] = useState<string[]>([])
@@ -236,7 +368,7 @@ export default function BarbeariaFacil() {
   const confirmarAgendamento = () => {
     alert(`Agendamento confirmado para ${diaSelecionado.completo} às ${horarioSelecionado}! Você receberá lembretes 24h e 1h antes do horário.`)
     // Reset
-    setEtapa("busca")
+    setEtapa("cliente-dashboard")
     setBarbeariaId(null)
     setProfissionalId(null)
     setServicoId(null)
@@ -260,10 +392,13 @@ export default function BarbeariaFacil() {
     setEtapa("horario")
   }
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    alert("Login realizado com sucesso!")
-    setEtapa("busca")
+  const handleLogin = (tipo: "cliente" | "barbearia") => {
+    alert(`Login realizado com sucesso como ${tipo}!`)
+    if (tipo === "cliente") {
+      setEtapa("cliente-dashboard")
+    } else {
+      setEtapa("barbearia-dashboard")
+    }
   }
 
   const iniciarCadastro = (tipo: "barbearia" | "cliente") => {
@@ -407,7 +542,7 @@ export default function BarbeariaFacil() {
     }
     
     alert("Cadastro realizado com sucesso! Bem-vindo ao BarbeariaFácil!")
-    setEtapa("busca")
+    setEtapa("cliente-dashboard")
     setEtapaCliente(1)
     setErrosCliente([])
     setMostrarErros(false)
@@ -439,7 +574,7 @@ export default function BarbeariaFacil() {
     }
     
     alert("Cadastro de barbearia realizado com sucesso! Aguarde aprovação.")
-    setEtapa("busca")
+    setEtapa("barbearia-dashboard")
     setEtapaBarbearia(1)
     setErrosBarbearia([])
     setMostrarErros(false)
@@ -486,6 +621,43 @@ export default function BarbeariaFacil() {
       setEtapa("inicial")
     } else {
       setEtapaBarbearia(etapaBarbearia - 1)
+    }
+  }
+
+  // Funções para dashboards
+  const cancelarAgendamento = (id: number) => {
+    alert("Agendamento cancelado com sucesso!")
+    // Aqui seria removido do estado/mock
+  }
+
+  const reagendarServico = (servico: any) => {
+    setBarbeariaId(barbearias.find(b => b.nome === servico.barbearia)?.id || null)
+    setProfissionalId(profissionais.find(p => p.nome === servico.profissional)?.id || null)
+    setServicoId(servicos.find(s => s.nome === servico.servico)?.id || null)
+    setEtapa("horario")
+  }
+
+  const alterarStatusAgendamento = (id: number, status: string) => {
+    alert(`Status alterado para: ${status}`)
+    // Aqui seria atualizado no estado/mock
+  }
+
+  const enviarMensagemMassa = () => {
+    if (mensagemMassa.trim()) {
+      alert("Mensagem enviada para todos os clientes!")
+      setMensagemMassa("")
+    }
+  }
+
+  const contratarPremium = () => {
+    alert("Destaque patrocinado contratado! Sua barbearia agora aparece no topo das buscas.")
+  }
+
+  const deixarAvaliacao = (id: number) => {
+    if (avaliacaoTemp.estrelas > 0) {
+      alert("Avaliação enviada com sucesso!")
+      setAvaliacaoTemp({ estrelas: 0, comentario: "" })
+      // Aqui seria atualizado no estado/mock
     }
   }
 
@@ -579,7 +751,7 @@ export default function BarbeariaFacil() {
               {/* Formulário de Login */}
               <Card className="bg-slate-800 border-slate-700">
                 <CardContent className="p-6 space-y-4">
-                  <form onSubmit={handleLogin} className="space-y-4">
+                  <form onSubmit={(e) => { e.preventDefault(); handleLogin("cliente") }} className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="email-inicial" className="text-slate-200">E-mail</Label>
                       <div className="relative">
@@ -613,7 +785,7 @@ export default function BarbeariaFacil() {
                       size="lg"
                       className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold shadow-lg shadow-emerald-500/20"
                     >
-                      Entrar
+                      Entrar como Cliente
                     </Button>
                   </form>
 
@@ -664,8 +836,548 @@ export default function BarbeariaFacil() {
         </div>
       )}
 
+      {/* DASHBOARD CLIENTE */}
+      {etapa === "cliente-dashboard" && (
+        <div className="min-h-screen">
+          {/* Header */}
+          <header className="border-b border-slate-800 bg-black/50 backdrop-blur-sm sticky top-0 z-50">
+            <div className="container mx-auto px-4 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="bg-gradient-to-br from-emerald-600 to-teal-600 p-2 rounded-lg shadow-lg shadow-emerald-500/20">
+                    <Scissors className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">BarbeariaFácil</h1>
+                    <p className="text-xs text-slate-400">Cliente</p>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-slate-400 hover:text-white"
+                  onClick={() => setEtapa("busca")}
+                >
+                  <Search className="w-4 h-4 mr-2" />
+                  Agendar Novo
+                </Button>
+              </div>
+            </div>
+          </header>
+
+          <main className="container mx-auto px-4 py-8">
+            <Tabs value={abaCliente} onValueChange={(value: any) => setAbaCliente(value)} className="w-full">
+              <TabsList className="grid w-full grid-cols-3 bg-slate-800 border-slate-700">
+                <TabsTrigger value="agendamentos" className="data-[state=active]:bg-emerald-600">Agendamentos Ativos</TabsTrigger>
+                <TabsTrigger value="historico" className="data-[state=active]:bg-emerald-600">Histórico</TabsTrigger>
+                <TabsTrigger value="tendencias" className="data-[state=active]:bg-emerald-600">Tendências</TabsTrigger>
+              </TabsList>
+
+              {/* Aba Agendamentos Ativos */}
+              <TabsContent value="agendamentos" className="space-y-6">
+                <div className="text-center space-y-2 mb-8">
+                  <h2 className="text-3xl font-bold text-white">Seus Agendamentos</h2>
+                  <p className="text-slate-400">Gerencie seus horários marcados</p>
+                </div>
+
+                <div className="grid gap-4">
+                  {agendamentosAtivos.map((agendamento) => (
+                    <Card key={agendamento.id} className="bg-slate-800 border-slate-700">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-2">
+                            <h3 className="text-xl font-bold text-white">{agendamento.servico}</h3>
+                            <p className="text-slate-400">{agendamento.barbearia}</p>
+                            <p className="text-slate-400">{agendamento.profissional}</p>
+                            <div className="flex items-center gap-2 text-sm">
+                              <Calendar className="w-4 h-4 text-emerald-400" />
+                              <span className="text-white">{new Date(agendamento.data).toLocaleDateString('pt-BR')} às {agendamento.horario}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                              <MapPin className="w-4 h-4 text-emerald-400" />
+                              <span className="text-slate-400">{agendamento.endereco}</span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                              {agendamento.status}
+                            </Badge>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                              onClick={() => sincronizarCalendario(`${agendamento.servico} - ${agendamento.barbearia}`, agendamento.data, agendamento.horario, agendamento.endereco)}
+                            >
+                              <CalendarDays className="w-4 h-4 mr-1" />
+                              Calendário
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="flex gap-3 mt-4">
+                          <Button
+                            variant="outline"
+                            className="flex-1 border-red-500/50 text-red-400 hover:bg-red-500/10"
+                            onClick={() => cancelarAgendamento(agendamento.id)}
+                          >
+                            Cancelar
+                          </Button>
+                          <Button
+                            variant="outline"
+                            className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700"
+                            onClick={() => reagendarServico(agendamento)}
+                          >
+                            Reagendar
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+
+              {/* Aba Histórico */}
+              <TabsContent value="historico" className="space-y-6">
+                <div className="text-center space-y-2 mb-8">
+                  <h2 className="text-3xl font-bold text-white">Histórico de Serviços</h2>
+                  <p className="text-slate-400">Seus serviços concluídos</p>
+                </div>
+
+                <div className="grid gap-4">
+                  {historicoServicos.map((servico) => (
+                    <Card key={servico.id} className="bg-slate-800 border-slate-700">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-2">
+                            <h3 className="text-xl font-bold text-white">{servico.servico}</h3>
+                            <p className="text-slate-400">{servico.barbearia}</p>
+                            <p className="text-slate-400">{servico.profissional}</p>
+                            <div className="flex items-center gap-2 text-sm">
+                              <Calendar className="w-4 h-4 text-emerald-400" />
+                              <span className="text-white">{new Date(servico.data).toLocaleDateString('pt-BR')} às {servico.horario}</span>
+                            </div>
+                            {servico.avaliacao && (
+                              <div className="flex items-center gap-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star key={i} className={`w-4 h-4 ${i < servico.avaliacao ? 'fill-emerald-400 text-emerald-400' : 'text-slate-600'}`} />
+                                ))}
+                                {servico.comentario && <span className="text-sm text-slate-400 ml-2">"{servico.comentario}"</span>}
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            <Badge className={`border-slate-500/20 ${servico.status === 'concluido' ? 'bg-green-500/10 text-green-400' : 'bg-slate-500/10 text-slate-400'}`}>
+                              {servico.status}
+                            </Badge>
+                            {!servico.avaliacao && servico.status === 'concluido' && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10"
+                                onClick={() => setAvaliacaoTemp({ estrelas: 0, comentario: "" })}
+                              >
+                                <Star className="w-4 h-4 mr-1" />
+                                Avaliar
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                        {servico.status === 'concluido' && (
+                          <Button
+                            className="w-full mt-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
+                            onClick={() => reagendarServico(servico)}
+                          >
+                            <RefreshCw className="w-4 h-4 mr-2" />
+                            Reagendar Fácil
+                          </Button>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+
+              {/* Aba Tendências */}
+              <TabsContent value="tendencias" className="space-y-6">
+                <div className="text-center space-y-2 mb-8">
+                  <h2 className="text-3xl font-bold text-white">Tendências na Sua Região</h2>
+                  <p className="text-slate-400">Cortes mais populares baseados nos agendamentos</p>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {tendencias.map((tendencia, index) => (
+                    <Card key={index} className="bg-slate-800 border-slate-700 overflow-hidden hover:border-emerald-500/50 transition-all">
+                      <div className="aspect-video overflow-hidden">
+                        <img src={tendencia.imagem} alt={tendencia.nome} className="w-full h-full object-cover" />
+                      </div>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-lg font-bold text-white">{tendencia.nome}</h3>
+                          <Badge className="bg-emerald-500/10 text-emerald-400">
+                            {tendencia.popularidade}% popular
+                          </Badge>
+                        </div>
+                        <Button
+                          className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
+                          onClick={() => setEtapa("busca")}
+                        >
+                          Agendar Agora
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </main>
+        </div>
+      )}
+
+      {/* DASHBOARD BARBEARIA */}
+      {etapa === "barbearia-dashboard" && (
+        <div className="min-h-screen">
+          {/* Header */}
+          <header className="border-b border-slate-800 bg-black/50 backdrop-blur-sm sticky top-0 z-50">
+            <div className="container mx-auto px-4 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="bg-gradient-to-br from-emerald-600 to-teal-600 p-2 rounded-lg shadow-lg shadow-emerald-500/20">
+                    <Scissors className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">BarbeariaFácil</h1>
+                    <p className="text-xs text-slate-400">Barbearia</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                    <Crown className="w-3 h-3 mr-1" />
+                    Premium
+                  </Badge>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-slate-400 hover:text-white"
+                    onClick={() => setEtapa("inicial")}
+                  >
+                    Sair
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <main className="container mx-auto px-4 py-8">
+            <Tabs value={abaBarbearia} onValueChange={(value: any) => setAbaBarbearia(value)} className="w-full">
+              <TabsList className="grid w-full grid-cols-4 bg-slate-800 border-slate-700">
+                <TabsTrigger value="agendamentos" className="data-[state=active]:bg-emerald-600">Agendamentos</TabsTrigger>
+                <TabsTrigger value="relatorios" className="data-[state=active]:bg-emerald-600">Relatórios</TabsTrigger>
+                <TabsTrigger value="mensagens" className="data-[state=active]:bg-emerald-600">Mensagens</TabsTrigger>
+                <TabsTrigger value="premium" className="data-[state=active]:bg-emerald-600">Premium</TabsTrigger>
+              </TabsList>
+
+              {/* Aba Agendamentos */}
+              <TabsContent value="agendamentos" className="space-y-6">
+                <div className="text-center space-y-2 mb-8">
+                  <h2 className="text-3xl font-bold text-white">Agendamentos de Hoje</h2>
+                  <p className="text-slate-400">Gerencie os horários da sua barbearia</p>
+                </div>
+
+                <div className="grid gap-4">
+                  {agendamentosBarbearia.map((agendamento) => (
+                    <Card key={agendamento.id} className="bg-slate-800 border-slate-700">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-2">
+                            <h3 className="text-xl font-bold text-white">{agendamento.cliente}</h3>
+                            <p className="text-slate-400">{agendamento.servico}</p>
+                            <p className="text-slate-400">{agendamento.profissional}</p>
+                            <div className="flex items-center gap-2 text-sm">
+                              <Clock className="w-4 h-4 text-emerald-400" />
+                              <span className="text-white">{agendamento.horario}</span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            <Badge className={`border-slate-500/20 ${
+                              agendamento.status === 'confirmado' ? 'bg-blue-500/10 text-blue-400' :
+                              agendamento.status === 'iniciado' ? 'bg-yellow-500/10 text-yellow-400' :
+                              'bg-green-500/10 text-green-400'
+                            }`}>
+                              {agendamento.status}
+                            </Badge>
+                            <div className="flex gap-2">
+                              {agendamento.status === 'confirmado' && (
+                                <Button
+                                  size="sm"
+                                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                                  onClick={() => alterarStatusAgendamento(agendamento.id, 'iniciado')}
+                                >
+                                  Iniciar
+                                </Button>
+                              )}
+                              {agendamento.status === 'iniciado' && (
+                                <Button
+                                  size="sm"
+                                  className="bg-green-600 hover:bg-green-700 text-white"
+                                  onClick={() => alterarStatusAgendamento(agendamento.id, 'concluido')}
+                                >
+                                  Concluir
+                                </Button>
+                              )}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="border-red-500/50 text-red-400 hover:bg-red-500/10"
+                                onClick={() => alterarStatusAgendamento(agendamento.id, 'no-show')}
+                              >
+                                No-Show
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+
+              {/* Aba Relatórios */}
+              <TabsContent value="relatorios" className="space-y-6">
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <h2 className="text-3xl font-bold text-white">Relatórios e Análise</h2>
+                    <p className="text-slate-400">Acompanhe o desempenho da sua barbearia</p>
+                  </div>
+                  <div className="flex gap-3">
+                    <Button
+                      variant={periodoRelatorio === 'semanal' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setPeriodoRelatorio('semanal')}
+                      className={periodoRelatorio === 'semanal' ? 'bg-emerald-600 hover:bg-emerald-700' : 'border-slate-600'}
+                    >
+                      Semanal
+                    </Button>
+                    <Button
+                      variant={periodoRelatorio === 'mensal' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setPeriodoRelatorio('mensal')}
+                      className={periodoRelatorio === 'mensal' ? 'bg-emerald-600 hover:bg-emerald-700' : 'border-slate-600'}
+                    >
+                      Mensal
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6 mb-8">
+                  <Card className="bg-slate-800 border-slate-700">
+                    <CardHeader>
+                      <CardTitle className="text-white flex items-center gap-2">
+                        <DollarSign className="w-5 h-5 text-emerald-400" />
+                        Faturamento
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-400">Bruto</span>
+                        <span className="text-2xl font-bold text-white">R$ {relatorios[periodoRelatorio].faturamentoBruto.toLocaleString('pt-BR')}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-400">Líquido (após taxas)</span>
+                        <span className="text-xl font-semibold text-emerald-400">R$ {relatorios[periodoRelatorio].faturamentoLiquido.toLocaleString('pt-BR')}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-slate-800 border-slate-700">
+                    <CardHeader>
+                      <CardTitle className="text-white flex items-center gap-2">
+                        <BarChart3 className="w-5 h-5 text-emerald-400" />
+                        KPIs
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-400">Taxa No-Show</span>
+                        <span className="text-xl font-semibold text-red-400">{relatorios[periodoRelatorio].kpis.noShow}%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-400">Taxa Cancelamento</span>
+                        <span className="text-xl font-semibold text-yellow-400">{relatorios[periodoRelatorio].kpis.cancelamentos}%</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <Card className="bg-slate-800 border-slate-700">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <Users className="w-5 h-5 text-emerald-400" />
+                      Performance por Profissional
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {relatorios[periodoRelatorio].profissionais.map((profissional, index) => (
+                        <div key={index} className="flex items-center justify-between p-4 bg-slate-700/50 rounded-lg">
+                          <div>
+                            <p className="text-white font-semibold">{profissional.nome}</p>
+                            <p className="text-sm text-slate-400">{profissional.atendimentos} atendimentos</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Star className="w-4 h-4 fill-emerald-400 text-emerald-400" />
+                            <span className="text-white font-semibold">{profissional.notaMedia}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div className="flex justify-center">
+                  <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white">
+                    <BarChart3 className="w-4 h-4 mr-2" />
+                    Gerar Relatório PDF
+                  </Button>
+                </div>
+              </TabsContent>
+
+              {/* Aba Mensagens */}
+              <TabsContent value="mensagens" className="space-y-6">
+                <div className="text-center space-y-2 mb-8">
+                  <h2 className="text-3xl font-bold text-white">Mensagens em Massa</h2>
+                  <p className="text-slate-400">Envie promoções e lembretes para seus clientes</p>
+                </div>
+
+                <Card className="bg-slate-800 border-slate-700">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <Send className="w-5 h-5 text-emerald-400" />
+                      Nova Mensagem
+                    </CardTitle>
+                    <CardDescription className="text-slate-400">
+                      Envie notificações push para todos os seus clientes
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <Textarea
+                      placeholder="Digite sua mensagem... (ex: Promoção especial hoje: 20% desconto em cortes!)"
+                      value={mensagemMassa}
+                      onChange={(e) => setMensagemMassa(e.target.value)}
+                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 min-h-[100px]"
+                    />
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-slate-400">
+                        {mensagemMassa.length}/160 caracteres
+                      </span>
+                      <Button
+                        onClick={enviarMensagemMassa}
+                        disabled={!mensagemMassa.trim()}
+                        className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
+                      >
+                        <Send className="w-4 h-4 mr-2" />
+                        Enviar para Todos
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <Card className="bg-slate-800 border-slate-700">
+                    <CardContent className="p-6 text-center">
+                      <Bell className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold text-white mb-2">Lembretes Automáticos</h3>
+                      <p className="text-sm text-slate-400 mb-4">Envie lembretes 24h e 1h antes dos agendamentos</p>
+                      <Button className="w-full bg-slate-700 hover:bg-slate-600 text-white">
+                        Configurar Lembretes
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-slate-800 border-slate-700">
+                    <CardContent className="p-6 text-center">
+                      <TrendingUp className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold text-white mb-2">Promoções</h3>
+                      <p className="text-sm text-slate-400 mb-4">Divulgue horários vagos e ofertas especiais</p>
+                      <Button className="w-full bg-slate-700 hover:bg-slate-600 text-white">
+                        Criar Promoção
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              {/* Aba Premium */}
+              <TabsContent value="premium" className="space-y-6">
+                <div className="text-center space-y-2 mb-8">
+                  <h2 className="text-3xl font-bold text-white">Recursos Premium</h2>
+                  <p className="text-slate-400">Aumente sua visibilidade e receita</p>
+                </div>
+
+                <Card className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-emerald-500/20">
+                  <CardContent className="p-8 text-center">
+                    <Crown className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
+                    <h3 className="text-2xl font-bold text-white mb-2">Destaque Patrocinado</h3>
+                    <p className="text-slate-400 mb-6">
+                      Apareça no topo dos resultados de busca na sua região. Seja visto por mais clientes em potencial.
+                    </p>
+                    <div className="flex items-center justify-center gap-4 mb-6">
+                      <div className="text-center">
+                        <p className="text-3xl font-bold text-emerald-400">R$ 99</p>
+                        <p className="text-sm text-slate-400">por mês</p>
+                      </div>
+                    </div>
+                    <Button
+                      onClick={contratarPremium}
+                      className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-8 py-3"
+                    >
+                      <Crown className="w-5 h-5 mr-2" />
+                      Contratar Destaque
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <Card className="bg-slate-800 border-slate-700">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="bg-emerald-500/10 p-2 rounded-lg">
+                          <TrendingUp className="w-6 h-6 text-emerald-400" />
+                        </div>
+                        <div>
+                          <h4 className="text-white font-semibold">Maior Visibilidade</h4>
+                          <p className="text-sm text-slate-400">Badge "Patrocinado" nos resultados</p>
+                        </div>
+                      </div>
+                      <p className="text-slate-400 text-sm">
+                        Sua barbearia aparece primeiro nas buscas locais, aumentando significativamente o número de agendamentos.
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-slate-800 border-slate-700">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="bg-emerald-500/10 p-2 rounded-lg">
+                          <BarChart3 className="w-6 h-6 text-emerald-400" />
+                        </div>
+                        <div>
+                          <h4 className="text-white font-semibold">Relatórios Avançados</h4>
+                          <p className="text-sm text-slate-400">Análises detalhadas de performance</p>
+                        </div>
+                      </div>
+                      <p className="text-slate-400 text-sm">
+                        Acesse métricas avançadas sobre seus clientes, horários de pico e oportunidades de crescimento.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </main>
+        </div>
+      )}
+
       {/* Header - Apenas para outras etapas */}
-      {etapa !== "inicial" && (
+      {etapa !== "inicial" && etapa !== "cliente-dashboard" && etapa !== "barbearia-dashboard" && (
         <header className="border-b border-slate-800 bg-black/50 backdrop-blur-sm sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
@@ -678,6 +1390,14 @@ export default function BarbeariaFacil() {
                   <p className="text-xs text-slate-400">Agende com um clique.</p>
                 </div>
               </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-slate-400 hover:text-white"
+                onClick={() => setEtapa("inicial")}
+              >
+                Voltar ao início
+              </Button>
             </div>
           </div>
         </header>
@@ -739,7 +1459,7 @@ export default function BarbeariaFacil() {
                 <CardTitle className="text-white text-center">Já tem uma conta?</CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form onSubmit={(e) => { e.preventDefault(); handleLogin("cliente") }} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="email-login" className="text-slate-200">E-mail</Label>
                     <div className="relative">
@@ -1623,7 +2343,68 @@ export default function BarbeariaFacil() {
 
             {/* Barbearias List */}
             <div className="grid gap-4 sm:gap-6">
-              {barbearias.map((barbearia) => (
+              {barbearias.filter(b => b.premium).map((barbearia) => (
+                <Card
+                  key={barbearia.id}
+                  className="bg-slate-800 border-emerald-500/50 hover:border-emerald-500 transition-all cursor-pointer group overflow-hidden relative"
+                  onClick={() => selecionarBarbearia(barbearia.id)}
+                >
+                  <div className="absolute top-4 right-4 z-10">
+                    <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                      <Crown className="w-3 h-3 mr-1" />
+                      Patrocinado
+                    </Badge>
+                  </div>
+                  <div className="flex flex-col sm:flex-row">
+                    <div className="relative w-full sm:w-48 h-48 sm:h-auto overflow-hidden">
+                      <img
+                        src={barbearia.imagem}
+                        alt={barbearia.nome}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="flex-1 p-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="text-xl font-bold text-white mb-1">{barbearia.nome}</h3>
+                          <div className="flex items-center gap-2 text-sm text-slate-400 mb-2">
+                            <MapPin className="w-4 h-4" />
+                            {barbearia.endereco}
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 p-0 h-auto"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              abrirGoogleMaps(barbearia.endereco, barbearia.latitude, barbearia.longitude)
+                            }}
+                          >
+                            <MapPin className="w-3 h-3 mr-1" />
+                            Ver no Google Maps
+                          </Button>
+                        </div>
+                        <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                          {barbearia.distancia}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1">
+                          <Star className="w-4 h-4 fill-emerald-400 text-emerald-400" />
+                          <span className="text-white font-semibold">{barbearia.avaliacao}</span>
+                          <span className="text-slate-500 text-sm">({barbearia.avaliacoes})</span>
+                        </div>
+                        <Button size="sm" className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white ml-auto shadow-lg shadow-emerald-500/20">
+                          Selecionar
+                          <ChevronRight className="w-4 h-4 ml-1" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+
+              {barbearias.filter(b => !b.premium).map((barbearia) => (
                 <Card
                   key={barbearia.id}
                   className="bg-slate-800 border-slate-700 hover:border-emerald-500 transition-all cursor-pointer group overflow-hidden"
@@ -1937,7 +2718,7 @@ export default function BarbeariaFacil() {
       </main>
 
       {/* Footer */}
-      {etapa !== "inicial" && (
+      {etapa !== "inicial" && etapa !== "cliente-dashboard" && etapa !== "barbearia-dashboard" && (
         <footer className="border-t border-slate-800 bg-black/50 mt-16">
           <div className="container mx-auto px-4 py-8">
             <div className="text-center text-slate-500 text-sm">
